@@ -21,6 +21,7 @@ from introduction import views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('readonly/', readonly.site.urls),
     path('', include('introduction.urls')),
     path('',include("django.contrib.auth.urls")),
     path('register',v.register,name="Registration"),
