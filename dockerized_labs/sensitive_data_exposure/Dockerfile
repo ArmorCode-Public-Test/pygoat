@@ -12,6 +12,12 @@ COPY . .
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Create a non-root user and give it ownership of the app directory
+# (needed since migrations write to the sqlite db under /app at runtime)
+RUN useradd --create-home --shell /bin/sh appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 8000
 
 # Use the entrypoint script
