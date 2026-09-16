@@ -450,7 +450,10 @@ def cmd_lab2(request):
             
             print(val)
             try:
-                output = eval(val)
+                if val and re.fullmatch(r'[0-9+\-*/().\s]+', val):
+                    output = eval(val)
+                else:
+                    output = "Invalid expression: only numeric arithmetic expressions are allowed"
             except:
                 output = "Something went wrong"
                 return render(request,'Lab/CMD/cmd_lab2.html',{"output":output})
