@@ -10,6 +10,11 @@ COPY . .
 ENV FLASK_APP=main.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
+RUN groupadd --system appgroup && useradd --system --gid appgroup --no-create-home appuser \
+    && chown -R appuser:appgroup /app
+
+USER appuser
+
 EXPOSE 8080
 
 CMD ["flask", "run", "--debug", "--port=8080"]
