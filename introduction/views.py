@@ -198,8 +198,8 @@ def insec_des(request):
 @dataclass
 class TestUser:
     admin: int = 0
-pickled_user = pickle.dumps(TestUser())
-encoded_user = base64.b64encode(pickled_user)
+serialized_user = json.dumps(TestUser().__dict__).encode('utf-8')
+encoded_user = base64.b64encode(serialized_user)
 
 def insec_des_lab(request):
     if request.user.is_authenticated:
@@ -210,7 +210,11 @@ def insec_des_lab(request):
             response.set_cookie(key='token',value=token.decode('utf-8'))
         else:
             token = base64.b64decode(token)
-            admin = pickle.loads(token)
+            try:
+                data = json.loads(token)
+                admin = TestUser(admin=int(data.get('admin', 0)))
+            except (ValueError, TypeError, KeyError):
+                admin = TestUser()
             if admin.admin == 1:
                 response = render(request,'Lab/insec_des/insec_des_lab.html', {"message":"Welcome Admin, SECRETKEY:ADMIN123"})
                 return response
