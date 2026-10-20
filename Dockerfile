@@ -30,4 +30,9 @@ EXPOSE 8000
 
 RUN python3 /app/manage.py migrate
 WORKDIR /app
+
+# create and switch to a non-root user
+RUN groupadd -r pygoat && useradd -r -g pygoat pygoat && chown -R pygoat:pygoat /app
+USER pygoat
+
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers","6", "pygoat.wsgi"]
